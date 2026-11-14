@@ -1,9 +1,6 @@
 # Hookclip — AI clipper for GTA VI streams
 
-**Status:** P0 built + verified end-to-end locally (Nov 14, 2026) · **Target:**
-landing + waitlist live Nov 14–15, 2026; full P0 live Nov 18, 2026
-(GTA VI launches Nov 19). Not deployed yet — deploy needs the owner's
-accounts (steps below).
+**Status:** P0 built + verified end-to-end locally (Nov 14, 2026) · **Live:** worker https://hookclip.deployxa.online, frontend https://hookclip.pages.dev (both free tiers, Nov 14, 2026) · **Target:** full P0 live Nov 18, 2026 (GTA VI launches Nov 19).
 
 ## What it is
 Paste a Twitch/YouTube VOD → ranked moments (0–99) with hooks, animated
@@ -63,7 +60,7 @@ python3 -m http.server 3000 -d out
   split correctly fell back). **Bug found in this clip:** the hook text
   overflowed both edges (single line at 76pt). Fixed in
   `worker/app/render.py` — hook is now pre-wrapped to ≤2 lines with
-  `\N`, shrinking to 64pt if needed.
+  `\\N`, shrinking to 64pt if needed.
 - Clip 2 (same moment, trimmed 153–183 s, 30 s): exported 10.1 MB;
   frames verified visually — hook wraps cleanly to 2 lines, karaoke
   captions render (current word highlighted yellow), watermark present.
@@ -89,6 +86,8 @@ python3 -m http.server 3000 -d out
 3. **Frontend → Cloudflare Pages:** connect the repo, build command
    `npm run build`, output directory `frontend/out`, root `frontend/`.
    Env var: `NEXT_PUBLIC_API_URL` = the worker URL (step 4).
+   NOTE: `NEXT_PUBLIC_*` values are baked in at build time — after changing
+   one, rebuild (Retry deployment, or push a new commit).
 4. **Worker → DeployXA:** connect the repo, root `worker/`, it builds the
    `Dockerfile` (Python 3.12 + ffmpeg). Env vars from `worker/.env.example`:
    `WAITLIST_ADMIN_TOKEN` (generate one), `GROQ_API_KEY`, `GEMINI_API_KEY`,
