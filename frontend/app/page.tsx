@@ -14,17 +14,17 @@ export default function Home() {
             <a href="#pricing">Pricing</a>
             <a href="/dashboard">Dashboard</a>
           </nav>
-          <a className="btn btn-sm" href="#waitlist">
-            Join the waitlist
+          <a className="btn btn-sm" href="/dashboard">
+            Start clipping
           </a>
         </div>
       </header>
 
       <main>
-        <section className="hero" id="waitlist">
+        <section className="hero">
           <div className="wrap">
             <span className="eyebrow">
-              <b>GTA VI launches Nov 19, 2026</b> — Hookclip opens Nov 18
+              <b>GTA VI launches Nov 19, 2026</b> — Hookclip is live now
             </span>
             <h1>
               GTA VI launches Nov 19.{" "}
@@ -36,7 +36,18 @@ export default function Home() {
               that finds the moments worth clipping: ranked, hooked,
               captioned, and ready to post.
             </p>
-            <WaitlistForm />
+            <div className="hero-cta">
+              <a className="btn btn-accent btn-lg" href="/dashboard">
+                Start clipping free
+              </a>
+              <a className="hero-alt" href="#updates">
+                Get GTA VI clipping tips by email ↓
+              </a>
+            </div>
+            <p className="waitlist-note">
+              Free 60 minutes a month. No card required. Live now — paste a
+              VOD and get ranked clips in minutes.
+            </p>
             <div className="earn-strip">
               <div className="earn-stat">
                 <strong>~$1</strong>
@@ -160,6 +171,9 @@ export default function Home() {
                   <li>Watermarked exports, 720p</li>
                   <li>Ranked moments + hooks + captions</li>
                 </ul>
+                <a className="btn plan-btn" href="/dashboard">
+                  Start free
+                </a>
               </div>
               <div className="plan hot">
                 <span className="flag">Most popular</span>
@@ -172,6 +186,9 @@ export default function Home() {
                   <li>Clean exports, 1080p, no watermark</li>
                   <li>Priority queue</li>
                 </ul>
+                <a className="btn btn-accent plan-btn" href="/dashboard">
+                  Start with Starter
+                </a>
               </div>
               <div className="plan">
                 <h3>Pro</h3>
@@ -183,17 +200,20 @@ export default function Home() {
                   <li>Everything in Starter</li>
                   <li>For clip teams and heavy days</li>
                 </ul>
+                <a className="btn plan-btn" href="/dashboard">
+                  Start with Pro
+                </a>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="section cta">
+        <section className="section cta" id="updates">
           <div className="wrap">
-            <h2>Launch day starts with an audience, not zero.</h2>
+            <h2>Get GTA VI clipping tips</h2>
             <p>
-              Join the waitlist and get first access on Nov 18 — one day
-              before GTA VI launches and every streamer goes live.
+              One short email a week until launch — what&rsquo;s working for
+              clippers, and what&rsquo;s new in Hookclip. No spam.
             </p>
             <WaitlistForm compact />
           </div>

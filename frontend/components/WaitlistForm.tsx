@@ -68,8 +68,8 @@ export default function WaitlistForm({ compact = false }: { compact?: boolean })
             {state.position > 0
               ? `You are #${state.position} in line. `
               : ""}
-            We&rsquo;ll email you first access when Hookclip opens on Nov 18 —
-            one day before GTA VI launches.
+            We&rsquo;ll send GTA VI clipping tips and product updates — about
+            once a week, no spam.
           </p>
         </div>
       </div>
@@ -105,7 +105,7 @@ export default function WaitlistForm({ compact = false }: { compact?: boolean })
             className="btn btn-accent"
             disabled={state.kind === "busy"}
           >
-            {state.kind === "busy" ? "Joining…" : "Join the waitlist"}
+            {state.kind === "busy" ? "Joining…" : "Join the list"}
           </button>
         </div>
         {state.kind === "error" && (
@@ -118,7 +118,7 @@ export default function WaitlistForm({ compact = false }: { compact?: boolean })
         <p className="waitlist-note">
           Free 60 minutes a month. No card required.
           {count !== null && count > 0
-            ? ` ${count} ${count === 1 ? "person" : "people"} already waiting.`
+            ? ` ${count} ${count === 1 ? "person" : "people"} on the list.`
             : ""}
         </p>
       )}
