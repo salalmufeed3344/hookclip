@@ -1,0 +1,11 @@
+# Hookclip — never commit these
+worker/data/
+worker/.venv/
+worker/__pycache__/
+worker/app/__pycache__/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+*.db
+*.sqlite3
+.env

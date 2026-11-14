@@ -1,0 +1,14 @@
+# Hookclip worker — FastAPI + pipeline
+# Install: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+httpx==0.28.1
+pydantic==2.10.4
+python-multipart==0.0.20
+yt-dlp==2024.12.23
+faster-whisper==1.2.1
+av==13.1.0  # faster-whisper calls av.open(metadata_errors=...), removed in PyAV 14+
+chat-downloader==0.2.3
+opencv-python-headless==4.10.0.84
+google-genai==1.6.0
+numpy==2.2.1
