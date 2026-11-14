@@ -37,6 +37,14 @@ def _startup():
     jobs.start_worker_thread()
 
 
+@app.get("/")
+def root():
+    """Minimal root route: DeployXA's release health check polls GET /
+    and requires a 2xx. Kept DB-free so the check can never fail on
+    storage."""
+    return {"status": "ok", "service": "hookclip-worker", "version": config.VERSION}
+
+
 @app.get("/health")
 def health():
     with db.connect() as conn:
