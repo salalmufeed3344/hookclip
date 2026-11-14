@@ -56,7 +56,7 @@ def _yt_dlp_base_args() -> list:
     egress proxy's CA (system bundle has it). `--compat-options no-certifi`
     makes it use the system certificates instead. Harmless on DeployXA."""
     return [_bin("yt-dlp"), "--compat-options", "no-certifi",
-            "--extractor-args", "youtube:player_client=tv_embedded"]
+            "--extractor-args", "youtube:player_client=android,ios,tv_embedded"]
 
 
 def probe(url: str) -> dict:
@@ -69,6 +69,11 @@ def probe(url: str) -> dict:
         raise RuntimeError(f"yt-dlp probe failed: {(r.stderr or '').strip()[-300:]}")
     info = json.loads(r.stdout)
     duration = float(info.get("duration") or 0)
+    if duration <= 0:
+        # A probe that cannot read the length must fail here: accepting it
+        # charges 1 credit for an unknown-length source and lets the worker
+        # download blindly (a multi-hour VOD ties it up for hours).
+        raise RuntimeError("Could not read the VOD length — try another link.")
     if duration > MAX_DURATION_SEC:
         raise RuntimeError(
             f"Source is {duration / 3600:.1f}h — capped at {config.MAX_SOURCE_HOURS}h.")

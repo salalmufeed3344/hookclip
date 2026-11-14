@@ -218,6 +218,28 @@ def claim_next() -> dict | None:
 
 def worker_loop(stop: threading.Event):
     db.init_db()
+    # A restart mid-job used to leave the job stuck in a non-terminal stage
+    # forever (claim_next only takes 'queued'). Fail stuck jobs fast so the
+    # queue stays honest, and refund their spent minutes.
+    with db.connect() as conn:
+        stuck = conn.execute(
+            "SELECT j.id, p.user_id, p.duration_sec FROM jobs j "
+            "LEFT JOIN projects p ON p.id = j.project_id "
+            "WHERE j.stage IN ('claimed','downloading','transcribing',"
+            "'detecting','ranking','rendering')"
+        ).fetchall()
+        for s in stuck:
+            conn.execute(
+                "UPDATE jobs SET stage = 'failed', "
+                "error = 'interrupted by worker restart - please retry', "
+                "updated_at = ? WHERE id = ?",
+                (db.now_iso(), s["id"]))
+            if s["user_id"] and s["duration_sec"]:
+                credits.refund(
+                    s["user_id"],
+                    max(1, math.ceil(float(s["duration_sec"]) / 60)),
+                    "refund: job interrupted by restart")
+        conn.commit()
     print("   ⚙️ worker loop started (DB queue, poll 2s)")
     while not stop.is_set():
         job = claim_next()
