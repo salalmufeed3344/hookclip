@@ -327,10 +327,10 @@ The landing page is a scroll-driven story told with GSAP ScrollTrigger (the tool
 
 - **Hero entrance** (once, on load): the frame settles (1000ms, fade + scale 1.05 → 1); the copy rises (700ms, fade + 20px rise, 90ms stagger, title first).
 - **Hero pin** (tall desktop only): scrolling swaps beat 1 (result) for beat 2 (fear) — the track translates -50% over +70% scroll. The frame parallaxes -8% as the hero leaves.
-- **Proof pin** (tall desktop only): the panel is static — one entrance per container. Its three moment rows reveal one per scroll step (stagger 0.3), then the earn line.
-- **Problem scrub** (tall desktop only): the section pins while the visitor's scroll drives a playhead across a 10-hour VOD — the red fill grows, 24 chat bars rise in sequence, the spike erupts, the "40 seconds" reveal and the closing line arrive at the end. A live time readout follows the scrub.
-- **Solution beats** (all viewports): each chapter fades + rises 24px once when it scrolls into view.
-- **How, sideways** (tall desktop only): the three steps pin and slide horizontally (-200vw) as the visitor scrolls.
+- **Proof pin** (tall desktop only): pins at the top of the viewport. The panel is static — one entrance per container. Its three moment rows reveal one per scroll step (stagger 0.4 across a +150% pin), then the earn line.
+- **Problem scrub** (tall desktop only): the section pins while the visitor's scroll drives a playhead across a 10-hour VOD — the red fill grows, 24 chat bars rise in sequence, the spike erupts, the "40 seconds" reveal and the closing line arrive at the end. The fill, the bars and the live time readout all run the full timeline length, so the playhead and the clock stay in sync to 10:00.
+- **Solution beats** (all viewports): each chapter (56vh) fades + rises 24px once when it scrolls into view. The beats live inside the centered column, so the ghost numerals never touch the viewport edge.
+- **How, sideways** (tall desktop only): the three steps pin and slide horizontally (-200vw). Each panel is a two-column scene — copy on the left, a visual of the mechanism on the right (VOD link, ranked scores, export chip) — so no panel is an empty viewport.
 - **Mobile and short desktops:** the same moments play once on enter instead of being pinned or scrubbed — pinned scenes would cut content taller than the viewport.
 - **Clip frame:** a slow Ken Burns (10s, ease-in-out, alternate, scale 1 → 1.05) so the still feels alive. Constant motion, linear family.
 - **Everything else is static.** No hover motion beyond button brightness. Under `prefers-reduced-motion`, no GSAP setup runs at all and every scene renders in its final state (pinned sections become normal flow); content renders visible with JS off (all animations use `gsap.from`, so the natural state is the visible one).

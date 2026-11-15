@@ -232,7 +232,7 @@ input, select, textarea { caret-color: var(--ink); }
   display: grid; grid-template-areas: "num text visual";
   grid-template-columns: 96px 1fr 320px; gap: 32px;
   padding: 56px 0; border-bottom: 1px solid var(--line);
-  align-items: center; min-height: 70vh;
+  align-items: center; min-height: 56vh;
 }
 .beat.flip { grid-template-areas: "num visual text";
   grid-template-columns: 96px 320px 1fr; }
@@ -298,8 +298,9 @@ input, select, textarea { caret-color: var(--ink); }
 .how-track { display: flex; width: 300vw; }
 .how-panel {
   width: 100vw; flex: none; min-height: 62vh;
-  display: flex; flex-direction: column; justify-content: center;
-  padding: 40px max(24px, calc((100vw - 1080px) / 2 + 24px)) 72px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+  align-items: center; max-width: var(--max); margin: 0 auto;
+  padding: 0 24px;
 }
 .how-num { font-size: 96px; font-weight: 800; letter-spacing: -0.04em;
   color: var(--ink-ghost); line-height: 1;
@@ -307,6 +308,12 @@ input, select, textarea { caret-color: var(--ink); }
 .how-panel h3 { font-size: 32px; margin: 16px 0 10px; }
 .how-panel p { margin: 0; color: var(--ink-soft); font-size: 17px;
   max-width: 520px; }
+.how-visual { display: flex; flex-direction: column; gap: 12px;
+  justify-content: center; }
+.how-url { font-size: 16px; color: var(--ink-soft);
+  background: var(--surface-2); border: 1px solid var(--line-strong);
+  border-radius: 10px; padding: 14px 16px;
+  font-variant-numeric: tabular-nums; }
 
 /* Features: hairline rows, label left, content right. */
 .feature-rows { border-top: 1px solid var(--line); }
@@ -427,7 +434,8 @@ input, select, textarea { caret-color: var(--ink); }
   .beat-visual { max-width: 320px; }
   .how-track { display: block; width: auto; }
   .how-panel { width: auto; min-height: 0; padding: 32px 0;
-    border-top: 1px solid var(--line); }
+    border-top: 1px solid var(--line); grid-template-columns: 1fr;
+    gap: 16px; max-width: none; }
   .how-num { font-size: 64px; }
   .how-panel h3 { font-size: 24px; }
   .plans { grid-template-columns: 1fr; }
@@ -450,7 +458,8 @@ input, select, textarea { caret-color: var(--ink); }
   .hero-beat { height: auto; min-height: 100svh; padding: 64px 0; }
   .how-track { display: block; width: auto; }
   .how-panel { width: auto; min-height: 0; padding: 32px 0;
-    border-top: 1px solid var(--line); }
+    border-top: 1px solid var(--line); grid-template-columns: 1fr;
+    gap: 16px; max-width: none; }
   .problem-stage { min-height: 0; padding: 48px 0; }
 }
 
@@ -583,6 +592,7 @@ input, select, textarea { caret-color: var(--ink); }
   .hero-beat { height: auto; min-height: 100svh; padding: 64px 0; }
   .how-track { display: block; width: auto; }
   .how-panel { width: auto; min-height: 0; padding: 32px 0;
-    border-top: 1px solid var(--line); }
+    border-top: 1px solid var(--line); grid-template-columns: 1fr;
+    gap: 16px; max-width: none; }
   .problem-stage { min-height: 0; }
 }

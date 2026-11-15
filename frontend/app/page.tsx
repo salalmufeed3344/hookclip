@@ -245,7 +245,8 @@ export default function Home() {
               large.
             </p>
           </div>
-          <div className="beats">
+          <div className="wrap">
+            <div className="beats">
             <article className="beat">
               <span className="beat-num">01</span>
               <div className="beat-text">
@@ -361,6 +362,7 @@ export default function Home() {
                 </div>
               </div>
             </article>
+            </div>
           </div>
         </section>
 
@@ -375,29 +377,54 @@ export default function Home() {
           <div className="how-viewport">
             <div className="how-track">
               <div className="how-panel">
-                <span className="how-num">1</span>
-                <h3>Paste a VOD link</h3>
-                <p>
-                  Drop in a Twitch VOD. Hookclip pulls the video and the
-                  chat replay — nothing to download or upload.
-                </p>
+                <div className="how-copy">
+                  <span className="how-num">1</span>
+                  <h3>Paste a VOD link</h3>
+                  <p>
+                    Drop in a Twitch VOD. Hookclip pulls the video and the
+                    chat replay — nothing to download or upload.
+                  </p>
+                </div>
+                <div className="how-visual">
+                  <div className="how-url">twitch.tv/videos/2924237279</div>
+                </div>
               </div>
               <div className="how-panel">
-                <span className="how-num">2</span>
-                <h3>Get the ranked moments</h3>
-                <p>
-                  Chat spikes, loud moments, and the transcript are scored
-                  0–99. The best clips come first, each with a plain-words
-                  reason and three hook options.
-                </p>
+                <div className="how-copy">
+                  <span className="how-num">2</span>
+                  <h3>Get the ranked moments</h3>
+                  <p>
+                    Chat spikes, loud moments, and the transcript are scored
+                    0–99. The best clips come first, each with a plain-words
+                    reason and three hook options.
+                  </p>
+                </div>
+                <div className="how-visual">
+                  <div className="score-chips score-chips-lg">
+                    <span className="score-chip top">87</span>
+                    <span className="score-chip">76</span>
+                    <span className="score-chip">68</span>
+                  </div>
+                </div>
               </div>
               <div className="how-panel">
-                <span className="how-num">3</span>
-                <h3>Export and post</h3>
-                <p>
-                  9:16 vertical, facecam and gameplay both in frame,
-                  captions burned in. Download the MP4 and post it anywhere.
-                </p>
+                <div className="how-copy">
+                  <span className="how-num">3</span>
+                  <h3>Export and post</h3>
+                  <p>
+                    9:16 vertical, facecam and gameplay both in frame,
+                    captions burned in. Download the MP4 and post it anywhere.
+                  </p>
+                </div>
+                <div className="how-visual">
+                  <div className="export-chip export-chip-lg">
+                    clip-01.mp4
+                    <span>1080×1920 · clean · 50s</span>
+                  </div>
+                  <div className="export-bar" aria-hidden="true">
+                    <i />
+                  </div>
+                </div>
               </div>
             </div>
           </div>

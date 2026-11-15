@@ -91,7 +91,7 @@ export default function StoryAnimations() {
         scrollTrigger: {
           trigger: ".problem-stage",
           start: "top top",
-          end: "+=160%",
+          end: "+=140%",
           scrub: 1,
           pin: true,
           anticipatePin: 1,
@@ -106,25 +106,25 @@ export default function StoryAnimations() {
         },
       });
       problemTl
-        .from(".vod-fill", { scaleX: 0, transformOrigin: "left center", ease: "none", duration: 3 }, 0)
-        .from(".vod-bar", { scaleY: 0, transformOrigin: "bottom", ease: "none", stagger: 0.08, duration: 3 }, 0)
-        .from(".vod-found", { opacity: 0, y: 12, ease: "none", duration: 0.4 }, 2.6)
+        .from(".vod-fill", { scaleX: 0, transformOrigin: "left center", ease: "none", duration: 3.4 }, 0)
+        .from(".vod-bar", { scaleY: 0, transformOrigin: "bottom", ease: "none", stagger: 0.08, duration: 3.4 }, 0)
+        .from(".vod-found", { opacity: 0, y: 12, ease: "none", duration: 0.4 }, 2.75)
         .from(".problem-close", { opacity: 0, y: 12, ease: "none", duration: 0.4 }, 3.0);
 
       // Proof rows reveal one per scroll step, panel pinned.
       const proofTl = gsap.timeline({
         scrollTrigger: {
           trigger: ".story-proof",
-          start: "top 70%",
-          end: "+=110%",
+          start: "top top",
+          end: "+=150%",
           scrub: 1,
           pin: true,
           anticipatePin: 1,
         },
       });
       proofTl
-        .from(".proof-row", { opacity: 0, y: 14, ease: "none", stagger: 0.3 }, 0)
-        .from(".proof-earn", { opacity: 0, y: 10, ease: "none", duration: 0.3 }, 0.9);
+        .from(".proof-row", { opacity: 0, y: 14, ease: "none", stagger: 0.4 }, 0)
+        .from(".proof-earn", { opacity: 0, y: 10, ease: "none", duration: 0.3 }, 1.2);
 
       // How-it-works scrolls sideways, pinned.
       gsap.to(".how-track", {
@@ -133,7 +133,7 @@ export default function StoryAnimations() {
         scrollTrigger: {
           trigger: ".story-how",
           start: "top top",
-          end: "+=200%",
+          end: "+=170%",
           scrub: 1,
           pin: true,
           anticipatePin: 1,
