@@ -186,7 +186,7 @@ export default function Home() {
                   <li>Clean exports, 1080p, no watermark</li>
                   <li>Priority queue</li>
                 </ul>
-                <a className="btn btn-accent plan-btn" href="/dashboard">
+                <a className="btn btn-accent plan-btn" href="/checkout?plan=starter">
                   Start with Starter
                 </a>
               </div>
@@ -200,7 +200,7 @@ export default function Home() {
                   <li>Everything in Starter</li>
                   <li>For clip teams and heavy days</li>
                 </ul>
-                <a className="btn plan-btn" href="/dashboard">
+                <a className="btn plan-btn" href="/checkout?plan=pro">
                   Start with Pro
                 </a>
               </div>
@@ -223,6 +223,13 @@ export default function Home() {
       <footer className="site-footer">
         <div className="wrap">
           <span>© 2026 Hookclip. Built for the GTA VI launch wave.</span>
+          <span>
+            <a href="#pricing">Pricing</a>
+            {" · "}
+            <a href="/dashboard">Dashboard</a>
+            {" · "}
+            <a href="/checkout?plan=starter">Upgrade</a>
+          </span>
           <span>
             Hookclip is not affiliated with Rockstar Games or Take-Two
             Interactive.

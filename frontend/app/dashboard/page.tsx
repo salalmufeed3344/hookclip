@@ -284,6 +284,9 @@ function DashboardInner() {
             <a href="/">Home</a>
             <a href="/dashboard">Dashboard</a>
           </nav>
+          <a className="btn btn-sm btn-accent" href="/checkout?plan=starter">
+            Upgrade
+          </a>
           {credits && (
             <span className="credits-pill">
               {credits.plan} · {credits.credits} min left
@@ -515,6 +518,13 @@ function DashboardInner() {
       <footer className="site-footer">
         <div className="wrap">
           <span>© 2026 Hookclip.</span>
+          <span>
+            <a href="/#pricing">Pricing</a>
+            {" · "}
+            <a href="/dashboard">Dashboard</a>
+            {" · "}
+            <a href="/checkout?plan=starter">Upgrade</a>
+          </span>
           <span>
             Hookclip is not affiliated with Rockstar Games or Take-Two
             Interactive.

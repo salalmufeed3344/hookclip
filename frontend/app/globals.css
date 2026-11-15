@@ -197,6 +197,8 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
   .waitlist-row { flex-direction: column; }
   .section { padding: 56px 0; }
   .dash-layout { grid-template-columns: 1fr; }
+  .checkout-layout { grid-template-columns: 1fr; }
+  .plan-switch { grid-template-columns: 1fr; }
 }
 
 /* ---------- dashboard (F-09, F-12) ---------- */
@@ -273,3 +275,42 @@ h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
 .moment-actions { display: flex; gap: 12px; align-items: center;
   margin-top: 14px; flex-wrap: wrap; }
 .moment-actions .dash-note { margin: 0; }
+
+/* ---------- checkout ---------- */
+.checkout-layout { display: grid; grid-template-columns: 1fr 380px; gap: 20px;
+  align-items: start; }
+.checkout-layout .dash-card { margin-bottom: 0; }
+.plan-switch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px;
+  margin: 16px 0 24px; }
+.plan-switch-btn {
+  cursor: pointer; font: inherit; text-align: left;
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 14px;
+}
+.plan-switch-btn:hover { border-color: var(--ink); }
+.plan-switch-btn.active { border-color: var(--ink); box-shadow: 0 0 0 1px var(--ink); }
+.plan-switch-btn strong { display: block; font-size: 15px; }
+.plan-switch-btn span { display: block; color: var(--ink-faint); font-size: 13.5px;
+  margin-top: 2px; }
+.checkout-plan-name { font-size: 24px; margin-bottom: 4px; }
+.checkout-plan-name span { font-size: 15px; font-weight: 500;
+  color: var(--ink-faint); margin-left: 4px; }
+.checkout-features { list-style: none; padding: 0; margin: 16px 0 0;
+  color: var(--ink-soft); font-size: 15px; }
+.checkout-features li { padding: 4px 0; }
+.checkout-features li::before { content: "— "; color: var(--ink-faint); }
+.checkout-features + .dash-note { margin-top: 16px; }
+.summary { margin: 16px 0 0; }
+.summary > div {
+  display: flex; justify-content: space-between; gap: 16px;
+  padding: 10px 0; border-top: 1px solid var(--line); font-size: 15px;
+}
+.summary > div:first-child { border-top: 0; }
+.summary dt { color: var(--ink-soft); }
+.summary dd { margin: 0; font-weight: 650; text-align: right; }
+.summary-total dt, .summary-total dd { font-size: 17px; font-weight: 800; }
+.pay-btn { width: 100%; text-align: center; margin-top: 20px; }
+.pay-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.pay-note { font-size: 14px; color: var(--ink-faint); margin: 12px 0 0; }
+.site-footer a { color: var(--ink-soft); text-decoration: none; }
+.site-footer a:hover { color: var(--ink); }
