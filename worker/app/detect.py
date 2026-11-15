@@ -18,7 +18,13 @@ KNOWN_BOTS = {
 # One user can contribute at most this many messages per 10s window.
 USER_CAP_PER_WINDOW = 3
 WINDOW_SEC = 10.0
-CHAT_OFFSET_SEC = 3.0  # chat reacts ~3s after the action; clip starts earlier
+# Chat lags the moment: viewers watch on a delayed stream, then react and
+# type, so a chat spike sits well AFTER the action. Clips cut from a chat
+# spike start 20s early (ai.with.raiyan GTA 6 Part 2 reel: "chat reacts
+# after the moment"). Audio spikes and viewer clips ARE the moment, so they
+# only get a small lead-in for context.
+CHAT_OFFSET_SEC = 20.0
+LEAD_IN_SEC = 3.0
 MIN_CLIP_SEC = 15.0
 MAX_CLIP_SEC = 60.0
 
@@ -204,9 +210,10 @@ def candidate_moments(transcript: dict, chat: list, audio: list,
     """Merge all signals into candidate moments with a signals dict.
 
     Chat windows with ratio >= 2.5, loud audio spikes, and viewer-clip
-    positions each open a candidate (start = spike - 3s offset, ~45s long,
-    snapped to words). Overlapping candidates merge; the strongest signals
-    win. Sorted by signal strength, best first.
+    positions each open a candidate (chat spikes start 20s early, audio /
+    viewer moments start 3s early, ~45s long, snapped to words).
+    Overlapping candidates merge; the strongest signals win. Sorted by
+    signal strength, best first.
     """
     words = transcript.get("words", [])
     raw = []
@@ -222,13 +229,13 @@ def candidate_moments(transcript: dict, chat: list, audio: list,
     for s in audio or []:
         if s["type"] == "loud":
             raw.append({
-                "start": max(0.0, s["t"] - CHAT_OFFSET_SEC),
+                "start": max(0.0, s["t"] - LEAD_IN_SEC),
                 "end": s["t"] + 45,
                 "signals": {"audio_spike": s["ratio"]},
             })
     for c in viewer_clips or []:
         raw.append({
-            "start": max(0.0, c["start"] - CHAT_OFFSET_SEC),
+            "start": max(0.0, c["start"] - LEAD_IN_SEC),
             "end": c["start"] + max(15.0, c["duration"]),
             "signals": {"viewer_clips": 1, "viewer_views": c["views"]},
         })
@@ -254,7 +261,7 @@ def candidate_moments(transcript: dict, chat: list, audio: list,
     if not merged and duration >= MIN_CLIP_SEC:
         loud = sorted(audio or [], key=lambda s: -s.get("ratio", 0))[:3]
         for s in loud:
-            merged.append({"start": max(0.0, s["t"] - CHAT_OFFSET_SEC),
+            merged.append({"start": max(0.0, s["t"] - LEAD_IN_SEC),
                            "end": s["t"] + 45, "signals": {"audio_spike": s["ratio"]}})
         merged.sort(key=lambda c: c["start"])
 
