@@ -278,7 +278,12 @@ function DashboardInner() {
       <header className="site-header">
         <div className="wrap">
           <a className="logo" href="/">
-            <span className="logo-mark">▶</span> Hookclip
+            <span className="logo-mark" aria-hidden="true">
+              <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                <path d="M1 1.5v11l10-5.5-10-5.5Z" fill="#0a0a0b" />
+              </svg>
+            </span>{" "}
+            Hookclip
           </a>
           <nav className="nav">
             <a href="/">Home</a>
@@ -300,7 +305,7 @@ function DashboardInner() {
         {apiDown && (
           <p className="dash-alert" role="alert">
             Can&rsquo;t reach the Hookclip worker at {API_URL}. The landing
-            page and waitlist still work — the dashboard needs the worker
+            page and waitlist still work. The dashboard needs the worker
             API running.
           </p>
         )}
@@ -516,7 +521,7 @@ function DashboardInner() {
       </main>
 
       <footer className="site-footer">
-        <div className="wrap">
+        <div className="wrap footer-plain">
           <span>© 2026 Hookclip.</span>
           <span>
             <a href="/#pricing">Pricing</a>

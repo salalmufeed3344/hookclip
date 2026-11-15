@@ -102,7 +102,12 @@ function CheckoutInner() {
       <header className="site-header">
         <div className="wrap">
           <a className="logo" href="/">
-            <span className="logo-mark">▶</span> Hookclip
+            <span className="logo-mark" aria-hidden="true">
+              <svg width="12" height="14" viewBox="0 0 12 14" fill="none">
+                <path d="M1 1.5v11l10-5.5-10-5.5Z" fill="#0a0a0b" />
+              </svg>
+            </span>{" "}
+            Hookclip
           </a>
           <nav className="nav">
             <a href="/">Home</a>
@@ -118,7 +123,7 @@ function CheckoutInner() {
       <main className="wrap dash-main">
         <h1>Checkout</h1>
         <p className="dash-sub">
-          One credit is one minute of source video. Pick a plan — the minutes
+          One credit is one minute of source video. Pick a plan. The minutes
           land on your account as soon as payment is connected.
         </p>
 
@@ -210,7 +215,7 @@ function CheckoutInner() {
       </main>
 
       <footer className="site-footer">
-        <div className="wrap">
+        <div className="wrap footer-plain">
           <span>© 2026 Hookclip.</span>
           <span>
             <a href="/#pricing">Pricing</a>
