@@ -11,6 +11,7 @@ colors:
   ink: "#fafafa"
   ink-soft: "#a1a1aa"
   ink-faint: "#8b8b93"
+  ink-ghost: "#5e5e66"
   line: "#232326"
   line-strong: "#2e2e33"
   alert-bg: "#1d1210"
@@ -122,6 +123,54 @@ typography:
     fontWeight: 800
     lineHeight: 1.15
     letterSpacing: "-0.02em"
+  hero-display:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "96px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.04em"
+  hero-display-min:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "52px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.04em"
+  hero-mobile:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "44px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.04em"
+  fear:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "64px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  lede:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "19px"
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: "0em"
+  beatnum:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "88px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.04em"
+  hownum:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "96px"
+    fontWeight: 800
+    lineHeight: 1
+    letterSpacing: "-0.04em"
+  score-lg:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "26px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
 rounded:
   xs: "2px"
   sm: "8px"
@@ -174,8 +223,8 @@ Dark is earned by the scene, not picked by category: clippers work at night, in 
 - Hairline-divided rows instead of cards as page structure.
 - Real product UI as the only visual; demonstration data is labeled as a sample.
 - System font stack throughout; hierarchy comes from size, weight, and color, never a display face.
-- Page structure follows @ayzz.thedesigner's landing order (hero → proof → problem → solution → how it works → FAQ → final CTA → footer). The product is shown in the proof section, after the hero, never before the problem is felt.
-- Motion follows Emil Kowalski's animation rules: transform + opacity only, strong ease-out, one entrance per container, shrinking stagger delays, reduced motion collapses the choreography.
+- Page structure follows @ayzz.thedesigner's landing order (hero → proof → problem → solution → how it works → FAQ → final CTA → footer). The product is shown in the proof section, after the hero, never before the problem is felt. The telling is a GSAP scroll story (@raishancard's reel): pinned scenes, a scrubbed VOD timeline, chapter beats, sideways steps.
+- Motion follows Emil Kowalski's animation rules plus GSAP ScrollTrigger for scrubbed, pinned scenes: transform + opacity only, strong ease-out, one entrance per container, no uniform stagger. Under reduced motion, no GSAP setup runs and every scene renders in its final state.
 
 ## Colors
 
@@ -206,10 +255,14 @@ The palette is a neutral near-black with a single red. No purple, no neon, no se
 **Character:** plain, tight, confident. Headlines are heavy and tightly tracked; body text is regular weight with generous line height.
 
 ### Hierarchy
-- **Display** (800, 56px, 1.15, -0.03em): hero headline only. Two lines maximum.
+- **Display** (800, fluid clamp 52–96px, 1.15, -0.04em): hero headline only. Two lines at desktop width — short and punchy ("GTA VI clips that pay."); the lede carries the streams-to-clips transformation.
+- **Fear** (800, fluid clamp 36–64px, 1.15, -0.03em): the hero's second beat ("Wait a week and the same clip is worth nothing.").
 - **Headline** (800, 36px, 1.15, -0.02em): section headings.
 - **Title** (800, 20px, 1.15, -0.02em): row titles, card headings, plan names.
+- **Beat title** (800, 24px, 1.15, -0.02em): solution chapter headings.
+- **How title** (800, 32px, 1.15, -0.02em): the three sideways step headings.
 - **Body** (400, 17px, 1.6): body copy. Measure 65–75ch; feature and step paragraphs cap at 560px.
+- **Lede** (400, 19px, 1.6): the hero's supporting line, max 520px.
 - **Sub** (400, 18px, 1.5): section introductions under headings.
 - **Input** (400, 16px, 1.5): form inputs.
 - **Row body** (400, 15.5px, 1.6): paragraphs inside hairline rows.
@@ -217,14 +270,14 @@ The palette is a neutral near-black with a single red. No purple, no neon, no se
 - **Small** (400, 14px, 1.5): notes, meta lines, dashboard text.
 - **Meta** (400, 13px, 1.4): panel meta, clip meta, plan flags.
 - **Label** (700, 12.5px, 0.08em, uppercase): the "Most popular" flag. Never above a heading (see the No Eyebrow Rule).
-- **Numerals** (800, tabular): cost numbers 28px, step numbers 32px, prices 40px, score chips 20–22px.
+- **Numerals** (800, tabular): cost numbers 28px, prices 40px, score chips 20–22px (26px large), chapter numerals 88px, how-step numbers 96px (64px on mobile).
 
 ### Named Rules
 **The No Eyebrow Rule.** No kicker or eyebrow label above a heading, ever. The heading carries its own weight.
 
 ## Layout
 
-One centered column, max width 1080px, 24px side padding. Sections are 72px tall with a 1px hairline on top. Headings sit above their content with more space above than below. The hero is centered; dashboard and checkout are left-aligned app screens. At 760px and below, grids collapse to one column, the nav hides, and section padding drops to 56px.
+One centered column, max width 1080px, 24px side padding. Sections are 72px tall with a 1px hairline on top. Headings sit above their content with more space above than below. The hero is a full-viewport pinned scene (copy left, tall frame right), not a centered stack; dashboard and checkout are left-aligned app screens. At 760px and below, grids collapse to one column, the nav hides, and section padding drops to 56px. On short viewports (under 800px tall) pinned scenes become normal flow so nothing is cut.
 
 ## Elevation & Depth
 
@@ -270,19 +323,24 @@ Corners are gently rounded: 12px on cards and panels, 10px on inputs and chips, 
 
 ## Motion
 
-The page moves in exactly two places, both following Emil Kowalski's rules (transform + opacity only; strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`; never `scale(0)`; no `transition: all`).
+The landing page is a scroll-driven story told with GSAP ScrollTrigger (the tool @raishancard's saved reel names), in the ayzz order: hero → proof → problem → solution → how → pricing → FAQ → final CTA. Motion follows Emil Kowalski's rules where they apply (transform + opacity only; strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`; never `scale(0)`; no `transition: all`), plus scrubbed, pinned scenes: `scrub: 1` everywhere, one entrance per container.
 
-- **Hero entrance** (once, on load): the launch pill fades only (decoration); the headline leads (600ms, fade + 12px rise); the lede follows at 80ms and the CTAs at 140ms, each with shorter, smaller motion. One keyframe, per-element travel distance.
-- **Proof panel** (once, when scrolled into view): the panel itself is static — one entrance per container. Its three moment rows stagger in with shrinking delays (0 / 70 / 120ms), 450ms each, fade + 8px rise. Total stagger span under 300ms.
+- **Hero entrance** (once, on load): the frame settles (1000ms, fade + scale 1.05 → 1); the copy rises (700ms, fade + 20px rise, 90ms stagger, title first).
+- **Hero pin** (tall desktop only): scrolling swaps beat 1 (result) for beat 2 (fear) — the track translates -50% over +70% scroll. The frame parallaxes -8% as the hero leaves.
+- **Proof pin** (tall desktop only): the panel is static — one entrance per container. Its three moment rows reveal one per scroll step (stagger 0.3), then the earn line.
+- **Problem scrub** (tall desktop only): the section pins while the visitor's scroll drives a playhead across a 10-hour VOD — the red fill grows, 24 chat bars rise in sequence, the spike erupts, the "40 seconds" reveal and the closing line arrive at the end. A live time readout follows the scrub.
+- **Solution beats** (all viewports): each chapter fades + rises 24px once when it scrolls into view.
+- **How, sideways** (tall desktop only): the three steps pin and slide horizontally (-200vw) as the visitor scrolls.
+- **Mobile and short desktops:** the same moments play once on enter instead of being pinned or scrubbed — pinned scenes would cut content taller than the viewport.
 - **Clip frame:** a slow Ken Burns (10s, ease-in-out, alternate, scale 1 → 1.05) so the still feels alive. Constant motion, linear family.
-- **Everything else is static.** No scroll reveals on other sections, no hover motion beyond button brightness. Under `prefers-reduced-motion`, the choreography collapses: no movement, no delays, opacity only; content renders visible with JS off (hidden state applies only under a `.js` parent class).
+- **Everything else is static.** No hover motion beyond button brightness. Under `prefers-reduced-motion`, no GSAP setup runs at all and every scene renders in its final state (pinned sections become normal flow); content renders visible with JS off (all animations use `gsap.from`, so the natural state is the visible one).
 
 ### Do:
 - **Do** show the product doing its job in the proof section, right after the hero — the ranked list, not a claim about it.
 - **Do** keep every text color at 4.5:1 or better on its surface (verified by the Impeccable detector, Nov 15, 2026).
 - **Do** label demonstration data as a sample wherever a visitor could mistake it for real output.
 - **Do** theme browser surfaces from the palette: red text selection, white focus rings, dark scrollbars.
-- **Do** use the two authored motion moments above and nothing else, and respect reduced-motion.
+- **Do** use the authored scroll-story scenes above and nothing else, and respect reduced-motion.
 
 ### Don't:
 - **Don't** add a gradient, glow, glass panel, bento grid, or orb anywhere.

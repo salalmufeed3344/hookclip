@@ -8,6 +8,7 @@
   --ink: #fafafa;
   --ink-soft: #a1a1aa;
   --ink-faint: #8b8b93;
+  --ink-ghost: #5e5e66; /* chapter numerals: passes 3:1 large-text on the ground */
   --line: #232326;
   --line-strong: #2e2e33;
   --accent: #d92d20;
@@ -33,6 +34,8 @@ body {
 }
 
 a { color: inherit; }
+
+p { text-wrap: pretty; }
 
 h1, h2, h3 { line-height: 1.15; letter-spacing: -0.02em; margin: 0;
   text-wrap: balance; }
@@ -79,40 +82,42 @@ input, select, textarea { caret-color: var(--ink); }
 .btn-sm { padding: 8px 16px; }
 .btn-lg { padding: 15px 30px; font-size: 17px; }
 
-/* ---------- hero ---------- */
-.hero { padding: 72px 0 64px; text-align: center; }
+/* ---------- story hero: pinned two-beat scene (result, then fear) ---------- */
+.story-hero { height: 100vh; height: 100svh; overflow: hidden;
+  border-bottom: 1px solid var(--line); }
+.hero-track { height: 200vh; }
+.hero-beat { height: 100vh; height: 100svh; display: flex; align-items: center; }
+.hero-beat-1 {
+  display: grid; grid-template-columns: 1.3fr 0.7fr; gap: 48px;
+  max-width: var(--max); margin: 0 auto; padding: 0 24px;
+  align-items: center;
+}
+.hero-copy h1 { font-size: clamp(52px, 7vw, 96px); letter-spacing: -0.04em;
+  margin: 0 0 20px; }
+.hero-copy .lede { font-size: 19px; color: var(--ink-soft); max-width: 520px;
+  margin: 0 0 32px; }
 .hero-pill {
   display: inline-block; font-size: 13.5px; font-weight: 650;
   color: var(--ink-soft); border: 1px solid var(--line-strong);
   border-radius: 999px; padding: 6px 14px; margin: 0 0 24px;
 }
-.hero h1 { font-size: 56px; max-width: 860px; margin: 0 auto 20px;
-  letter-spacing: -0.03em; }
-.hero h1 .accent { color: var(--accent); }
-.hero p.lede {
-  font-size: 20px; color: var(--ink-soft); max-width: 640px;
-  margin: 0 auto 32px;
+.hero-cta { display: flex; gap: 20px; align-items: center; flex-wrap: wrap;
+  margin: 0; }
+.hero-frame {
+  position: relative; border-radius: 12px; overflow: hidden;
+  border: 1px solid var(--line-strong); aspect-ratio: 9 / 16;
+  background: var(--surface-2); width: 100%; max-width: 340px;
+  max-height: 72vh; justify-self: end;
 }
-.hero-cta {
-  display: flex; gap: 20px; align-items: center; justify-content: center;
-  flex-wrap: wrap; margin: 0 auto 28px;
-}
-.hero-alt { font-size: 15px; color: var(--ink-soft); }
-.hero-alt:hover { color: var(--ink); }
-.hero-fear { font-size: 14px; color: var(--ink-faint); margin: 0 auto; }
-
-/* Hero entrance (Emil Kowalski choreography): pill fades only (decoration);
-   title leads, lede + CTAs follow with shorter, smaller motion. */
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-@keyframes riseIn {
-  from { opacity: 0; transform: translateY(var(--ty, 12px)); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.anim-pill { animation: fadeIn .4s var(--ease-out) both; }
-.anim-title { --ty: 12px; animation: riseIn .6s var(--ease-out) both; }
-.anim-lede { --ty: 8px; animation: riseIn .5s var(--ease-out) 80ms both; }
-.anim-cta { --ty: 6px; animation: riseIn .5s var(--ease-out) 140ms both; }
-.anim-fear { --ty: 6px; animation: riseIn .5s var(--ease-out) 200ms both; }
+.hero-frame img { display: block; width: 100%; height: 100%;
+  object-fit: cover;
+  animation: kenburns 10s ease-in-out infinite alternate; }
+.hero-beat-2 { flex-direction: column; justify-content: center;
+  text-align: center; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+.fear-big { font-size: clamp(36px, 5vw, 64px); font-weight: 800;
+  letter-spacing: -0.03em; margin: 0 0 16px; max-width: 900px; }
+.fear-sub { font-size: 20px; color: var(--ink-soft); margin: 0 0 48px; }
+.scroll-cue { font-size: 14px; color: var(--ink-faint); margin: 0; }
 
 /* Proof panel: the real dashboard UI, shown not claimed. The panel itself
    is static (one entrance per container); its moment rows stagger in when
@@ -172,15 +177,37 @@ input, select, textarea { caret-color: var(--ink); }
 .proof-earn { font-size: 15px; color: var(--ink-soft); text-align: center;
   margin: 24px auto 0; max-width: 640px; }
 
-/* Proof rows stagger in once, when the panel scrolls into view.
-   Shrinking delays (0 / 70 / 120ms); total stagger span under 300ms.
-   Hidden state only applies under .js, so no-JS renders visible. */
-.js .motion-reveal .moment-row { opacity: 0; transform: translateY(8px); }
-.js .motion-reveal.is-visible .moment-row {
-  opacity: 1; transform: none;
-  transition: opacity .45s var(--ease-out) var(--d, 0ms),
-    transform .45s var(--ease-out) var(--d, 0ms);
-}
+/* ---------- problem: scrub the 10-hour VOD ---------- */
+.story-problem { border-top: 1px solid var(--line); scroll-margin-top: 80px; }
+.problem-stage { min-height: 100vh; min-height: 100svh; display: flex;
+  align-items: center; padding: 56px 0; }
+.problem-stage h2 { font-size: 36px; margin-bottom: 12px; }
+.problem-stage .sub { color: var(--ink-soft); font-size: 18px;
+  max-width: 620px; margin: 0 0 40px; }
+.vod-scrub { margin: 0 0 32px; }
+.vod-track { position: relative; height: 10px; background: var(--line);
+  border-radius: 999px; }
+.vod-fill { position: absolute; inset: 0; background: var(--accent);
+  border-radius: 999px; }
+.vod-head { position: absolute; right: -1px; top: -5px; width: 2px;
+  height: 20px; background: #fff; border-radius: 2px; }
+.vod-spike-mark { position: absolute; left: 81%; top: -26px;
+  transform: translateX(-50%); font-size: 12.5px; font-weight: 700;
+  color: var(--ink-soft); white-space: nowrap; }
+.vod-times { display: flex; justify-content: space-between; font-size: 13px;
+  color: var(--ink-faint); margin: 10px 0 0;
+  font-variant-numeric: tabular-nums; }
+.vod-time { color: var(--ink-soft); }
+.vod-chat { display: flex; align-items: flex-end; gap: 3px; height: 110px;
+  margin-top: 24px; }
+.vod-bar { flex: 1; background: var(--line-strong);
+  border-radius: 2px 2px 0 0; }
+.vod-bar.spike { background: var(--accent); }
+.vod-found { display: flex; gap: 14px; align-items: flex-start;
+  margin: 28px 0 0; font-size: 16px; }
+.vod-found strong { display: block; font-size: 17px; }
+.problem-close { font-size: 20px; font-weight: 700; letter-spacing: -0.02em;
+  margin: 32px 0 0; max-width: 640px; }
 
 /* ---------- problem: the cost, priced in hours ---------- */
 .cost-list { border-top: 1px solid var(--line); }
@@ -194,33 +221,46 @@ input, select, textarea { caret-color: var(--ink); }
 .cost-row p { margin: 0; color: var(--ink-soft); font-size: 16px;
   max-width: 560px; }
 
-/* ---------- solution: 6 features, each a benefit + a small visual ---------- */
-.solution-rows { border-top: 1px solid var(--line); }
-.solution-row {
-  display: grid; grid-template-columns: 1fr 220px; gap: 32px;
-  padding: 32px 0; border-bottom: 1px solid var(--line);
-  align-items: center;
+/* ---------- solution: six chapter beats ---------- */
+.story-solution { border-top: 1px solid var(--line); padding: 72px 0;
+  scroll-margin-top: 80px; }
+.story-solution h2 { font-size: 36px; margin-bottom: 12px; }
+.story-solution .sub { color: var(--ink-soft); font-size: 18px;
+  max-width: 620px; margin: 0 0 16px; }
+.beats { border-top: 1px solid var(--line); }
+.beat {
+  display: grid; grid-template-areas: "num text visual";
+  grid-template-columns: 96px 1fr 320px; gap: 32px;
+  padding: 56px 0; border-bottom: 1px solid var(--line);
+  align-items: center; min-height: 70vh;
 }
-.solution-row h3 { font-size: 20px; margin: 0 0 6px; }
-.solution-row p { margin: 0; color: var(--ink-soft); font-size: 15.5px;
-  max-width: 520px; }
-.solution-visual {
-  background: var(--surface); border: 1px solid var(--line);
-  border-radius: 12px; padding: 20px; min-height: 128px;
-  display: flex; flex-direction: column; justify-content: center; gap: 10px;
-}
+.beat.flip { grid-template-areas: "num visual text";
+  grid-template-columns: 96px 320px 1fr; }
+.beat-num { grid-area: num; font-size: 88px; font-weight: 800;
+  letter-spacing: -0.04em; color: var(--ink-ghost); line-height: 1;
+  font-variant-numeric: tabular-nums; }
+.beat-text { grid-area: text; }
+.beat-text h3 { font-size: 24px; margin: 0 0 10px; max-width: 480px; }
+.beat-text p { margin: 0; color: var(--ink-soft); font-size: 16.5px;
+  max-width: 480px; }
+.beat-visual { grid-area: visual; }
 .score-chips { display: flex; gap: 8px; }
+.score-chips-lg .score-chip { width: 64px; height: 64px; font-size: 26px;
+  border-radius: 12px; }
 .chat-bars { display: flex; align-items: flex-end; gap: 3px; height: 56px; }
 .chat-bars i { flex: 1; background: var(--line-strong);
   border-radius: 2px 2px 0 0; }
 .chat-bars i.spike { background: var(--accent); }
+.chat-chart { height: 120px; }
 .visual-cap { font-size: 12.5px; color: var(--ink-faint); }
 .hook-lines { display: grid; gap: 8px; font-size: 14px; }
 .hook-lines span { color: var(--ink-soft); }
 .hook-lines span:first-child { color: var(--ink); font-weight: 650; }
+.hook-lines-lg { font-size: 19px; }
 .caption-words { font-size: 17px; font-weight: 800; letter-spacing: -0.01em;
   line-height: 1.4; color: var(--ink-faint); }
 .caption-words span { color: var(--ink); }
+.caption-words-lg { font-size: 40px; }
 .split-frame {
   width: 72px; margin: 0 auto; aspect-ratio: 9 / 16;
   border: 1px solid var(--line-strong); border-radius: 8px;
@@ -230,9 +270,12 @@ input, select, textarea { caret-color: var(--ink); }
 .split-face { flex: 0 0 32%; background: var(--line-strong);
   border-bottom: 1px solid var(--line-strong); }
 .split-game { flex: 1; background: var(--surface-2); }
+.split-frame-lg { width: 120px; }
 .export-chip { font-size: 14px; font-weight: 650; }
 .export-chip span { display: block; font-size: 13px; font-weight: 500;
   color: var(--ink-faint); margin-top: 2px; }
+.export-chip-lg { font-size: 17px; }
+.export-chip-lg span { font-size: 14px; }
 .export-bar { height: 6px; background: var(--line); border-radius: 999px;
   overflow: hidden; }
 .export-bar i { display: block; height: 100%; width: 100%;
@@ -245,17 +288,25 @@ input, select, textarea { caret-color: var(--ink); }
 .section .sub { color: var(--ink-soft); font-size: 18px; max-width: 620px;
   margin: 0 0 40px; }
 
-/* Steps: a numbered sequence with hairlines, not cards. */
-.steps-list { border-top: 1px solid var(--line); }
-.step-row {
-  display: grid; grid-template-columns: 72px 1fr; gap: 20px;
-  padding: 28px 0; border-bottom: 1px solid var(--line);
+/* ---------- how it works: sideways on desktop ---------- */
+.story-how { border-top: 1px solid var(--line); padding: 72px 0 0;
+  scroll-margin-top: 80px; }
+.story-how h2 { font-size: 36px; margin-bottom: 12px; }
+.story-how .sub { color: var(--ink-soft); font-size: 18px; max-width: 620px;
+  margin: 0 0 40px; }
+.how-viewport { overflow: hidden; }
+.how-track { display: flex; width: 300vw; }
+.how-panel {
+  width: 100vw; flex: none; min-height: 62vh;
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 40px max(24px, calc((100vw - 1080px) / 2 + 24px)) 72px;
 }
-.step-num { font-size: 32px; font-weight: 800; letter-spacing: -0.03em;
-  color: var(--ink-faint); font-variant-numeric: tabular-nums; }
-.step-row h3 { font-size: 20px; margin-bottom: 6px; }
-.step-row p { margin: 0; color: var(--ink-soft); font-size: 15.5px;
-  max-width: 560px; }
+.how-num { font-size: 96px; font-weight: 800; letter-spacing: -0.04em;
+  color: var(--ink-ghost); line-height: 1;
+  font-variant-numeric: tabular-nums; }
+.how-panel h3 { font-size: 32px; margin: 16px 0 10px; }
+.how-panel p { margin: 0; color: var(--ink-soft); font-size: 17px;
+  max-width: 520px; }
 
 /* Features: hairline rows, label left, content right. */
 .feature-rows { border-top: 1px solid var(--line); }
@@ -304,6 +355,7 @@ input, select, textarea { caret-color: var(--ink); }
 /* ---------- final CTA + footer ---------- */
 .cta { text-align: center; }
 .cta h2 { margin-bottom: 12px; }
+.cta-big h2 { font-size: clamp(36px, 5vw, 56px); }
 .cta p { color: var(--ink-soft); margin: 0 auto 28px; max-width: 520px; }
 .waitlist { max-width: 520px; margin: 0 auto; }
 .waitlist-row { display: flex; gap: 8px; }
@@ -350,19 +402,35 @@ input, select, textarea { caret-color: var(--ink); }
   padding-top: 24px; border-top: 1px solid var(--line); }
 
 @media (max-width: 760px) {
-  .hero { padding: 64px 0 56px; }
-  .hero h1 { font-size: 40px; }
-  .hero p.lede { font-size: 18px; }
+  .story-hero { height: auto; overflow: visible; }
+  .hero-track { height: auto; }
+  .hero-beat { height: auto; min-height: 100svh; padding: 64px 0; }
+  .hero-beat-1 { grid-template-columns: 1fr; gap: 32px; }
+  .hero-copy h1 { font-size: 44px; }
+  .hero-copy .lede { font-size: 18px; }
+  .hero-frame { max-width: 220px; margin: 0 auto; justify-self: center;
+    max-height: none; }
+  .fear-big { font-size: 36px; }
   .panel-body { grid-template-columns: 1fr; }
   .panel-head { flex-direction: column; align-items: flex-start; gap: 2px; }
   .panel-clip { border-left: 0; border-top: 1px solid var(--line); }
   .clip-frame { max-width: 220px; margin: 0 auto; }
   .cost-row { grid-template-columns: 1fr; gap: 4px; }
-  .solution-row { grid-template-columns: 1fr; gap: 16px; }
-  .solution-visual { max-width: 280px; }
-  .steps, .features, .plans { grid-template-columns: 1fr; }
-  .step-row { grid-template-columns: 48px 1fr; gap: 12px; }
-  .step-num { font-size: 24px; }
+  .problem-stage { padding: 40px 0; }
+  .vod-chat { height: 96px; }
+  .vod-spike-mark { display: none; }
+  .story-solution { padding: 56px 0; }
+  .beat { grid-template-columns: 1fr;
+    grid-template-areas: "num" "text" "visual"; gap: 16px;
+    min-height: 0; padding: 40px 0; }
+  .beat-num { font-size: 56px; }
+  .beat-visual { max-width: 320px; }
+  .how-track { display: block; width: auto; }
+  .how-panel { width: auto; min-height: 0; padding: 32px 0;
+    border-top: 1px solid var(--line); }
+  .how-num { font-size: 64px; }
+  .how-panel h3 { font-size: 24px; }
+  .plans { grid-template-columns: 1fr; }
   .feature-row { grid-template-columns: 1fr; gap: 6px; }
   .faq-row { grid-template-columns: 1fr; gap: 6px; }
   .footer-cols { grid-template-columns: 1fr; }
@@ -372,6 +440,18 @@ input, select, textarea { caret-color: var(--ink); }
   .dash-layout { grid-template-columns: 1fr; }
   .checkout-layout { grid-template-columns: 1fr; }
   .plan-switch { grid-template-columns: 1fr; }
+}
+
+/* Short viewports: pinned scenes become normal flow (GSAP skips the pins
+   here too), so nothing is cut. */
+@media (max-height: 799px) {
+  .story-hero { height: auto; overflow: visible; }
+  .hero-track { height: auto; }
+  .hero-beat { height: auto; min-height: 100svh; padding: 64px 0; }
+  .how-track { display: block; width: auto; }
+  .how-panel { width: auto; min-height: 0; padding: 32px 0;
+    border-top: 1px solid var(--line); }
+  .problem-stage { min-height: 0; padding: 48px 0; }
 }
 
 /* ---------- dashboard (F-09, F-12) ---------- */
@@ -497,7 +577,12 @@ input, select, textarea { caret-color: var(--ink); }
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; }
   html { scroll-behavior: auto; }
-  /* Collapse the choreography: no movement, no delays, keep opacity. */
-  .js .motion-reveal .moment-row { opacity: 1; transform: none;
-    transition: none; }
+  /* No GSAP setup runs, so pinned scenes become normal flow. */
+  .story-hero { height: auto; overflow: visible; }
+  .hero-track { height: auto; }
+  .hero-beat { height: auto; min-height: 100svh; padding: 64px 0; }
+  .how-track { display: block; width: auto; }
+  .how-panel { width: auto; min-height: 0; padding: 32px 0;
+    border-top: 1px solid var(--line); }
+  .problem-stage { min-height: 0; }
 }
