@@ -1,0 +1,1 @@
+{"dependencies":{"@remotion/cli":"^4.0.0","react":"18.3.1","react-dom":"18.3.1","remotion":"^4.0.0","typescript":"^5.0.0"},"description":"Remotion composition for Hookclip animated captions (word-by-word highlight + hook animation) over the ffmpeg-reframed clip.","name":"hookclip-remotion","private":true,"scripts":{"render":"remotion render"},"version":"0.1.0"}

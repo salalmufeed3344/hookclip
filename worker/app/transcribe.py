@@ -2,8 +2,10 @@
 
 Primary: Groq Whisper Large v3 Turbo ($0.04/hr, free tier 8 hrs/day).
 Audio is chunked to stay under Groq's 100 MB file cap.
-Fallback: local faster-whisper (tiny model, CPU) — no API cost, slower.
-Returns {"segments": [{start, end, text}], "words": [{w, s, e}], "text": str}.
+Local: WhisperX (word alignment + optional diarization), falling back to
+faster-whisper (tiny model, CPU) if WhisperX is missing or fails.
+Returns {"segments": [{start, end, text}], "words": [{w, s, e}],
+"text": str, "backend": str}.
 """
 import io
 import math
@@ -98,10 +100,84 @@ def transcribe_local(wav_path: Path) -> dict:
     return {"segments": segments, "words": words, "text": " ".join(texts)}
 
 
+def transcribe_whisperx(wav_path: Path) -> dict:
+    """WhisperX on CPU: precise word timestamps (alignment model) +
+    optional speaker diarization (pyannote, needs an HF token).
+
+    Model size from $WHISPERX_MODEL (default "base"). Raises on any
+    failure — the caller falls back to faster-whisper. Diarization is
+    best effort inside this function: a failure there never loses the
+    transcript, it just leaves "speakers" out.
+    """
+    import whisperx
+
+    model_size = os.environ.get("WHISPERX_MODEL", "base").strip() or "base"
+    try:
+        import torch
+        torch.set_num_threads(2)
+    except Exception:
+        pass
+    model = whisperx.load_model(model_size, "cpu", compute_type="int8")
+    audio = whisperx.load_audio(str(wav_path))
+    result = model.transcribe(audio, batch_size=4)
+    lang = (result.get("language") or "en").split("-")[0]
+    model_a, metadata = whisperx.load_align_model(
+        language_code=lang, device="cpu")
+    result = whisperx.align(result["segments"], model_a, metadata,
+                            audio, "cpu", return_char_alignments=False)
+    # Diarization: only with an HF token (pyannote models are gated).
+    token = (os.environ.get("HF_TOKEN", "")
+             or os.environ.get("HUGGING_FACE_HUB_TOKEN", ""))
+    if token:
+        try:
+            diarize_model = whisperx.DiarizationPipeline(
+                use_auth_token=token, device="cpu")
+            diarize_segments = diarize_model(audio)
+            result = whisperx.assign_word_speakers(
+                diarize_segments, result)
+            speakers = sorted({w.get("speaker") for s in result["segments"]
+                               for w in (s.get("words") or [])
+                               if w.get("speaker")})
+            print(f"   🗣️ WhisperX diarization: {len(speakers)} speaker(s).")
+        except Exception as e:
+            print(f"   ℹ️ WhisperX diarization skipped "
+                  f"({type(e).__name__}: {e})")
+    segments, words, texts = [], [], []
+    for seg in result.get("segments", []):
+        segments.append({"start": float(seg["start"]), "end": float(seg["end"]),
+                         "text": (seg.get("text") or "").strip()})
+        texts.append((seg.get("text") or "").strip())
+        for w in seg.get("words") or []:
+            if (w.get("word") or "").strip():
+                entry = {"w": w["word"].strip(), "s": float(w["start"]),
+                         "e": float(w["end"])}
+                if w.get("speaker"):
+                    entry["speaker"] = str(w["speaker"])
+                words.append(entry)
+    return {"segments": segments, "words": words, "text": " ".join(texts),
+            "backend": "whisperx", "model": f"whisperx-{model_size}"}
+
+
 def transcribe(wav_path: Path) -> dict:
-    """Groq when a key is set, local faster-whisper otherwise."""
+    """Groq when a key is set, WhisperX locally, faster-whisper last.
+
+    Order: Groq (cheap/fast, primary) -> WhisperX (precise word timings
+    + diarization, no API cost) -> faster-whisper tiny (the old fallback).
+    Each step degrades to the next on failure; a job never crashes here.
+    """
     if config.GROQ_API_KEY:
         print("   🎙️ Transcribing via Groq Whisper (turbo)…")
-        return transcribe_groq(wav_path)
-    print("   🎙️ No GROQ_API_KEY — transcribing locally (faster-whisper tiny)…")
-    return transcribe_local(wav_path)
+        result = transcribe_groq(wav_path)
+        result["backend"] = "groq"
+        return result
+    if not os.environ.get("WHISPERX_DISABLE"):
+        try:
+            print("   🎙️ No GROQ_API_KEY — transcribing locally (WhisperX)…")
+            return transcribe_whisperx(wav_path)
+        except Exception as e:
+            print(f"   ⚠️ WhisperX failed ({type(e).__name__}: {e}) — "
+                  f"falling back to faster-whisper.")
+    print("   🎙️ Transcribing locally (faster-whisper tiny)…")
+    result = transcribe_local(wav_path)
+    result["backend"] = "faster-whisper"
+    return result

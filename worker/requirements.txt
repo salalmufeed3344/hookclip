@@ -12,3 +12,49 @@ chat-downloader==0.2.3
 opencv-python-headless==4.10.0.84
 google-genai==1.6.0
 numpy==2.2.1
+
+# --- Clip stack (Nov 15, 2026 — from the marc.kaz reel) ---
+# WhisperX (word timestamps + diarization), PySceneDetect (scene cuts),
+# Auto-Editor (silence trim). Remotion lives in remotion/ (Node, not pip).
+#
+# TORCH PINNING — READ BEFORE TOUCHING: the CPU index below is load-bearing.
+# PyPI's torch wheels are CUDA builds (~2.5 GB with nvidia libs) and two
+# of whisperx's own deps fight over the torch version: whisperx wants
+# torch~=2.8.0 while torchcodec wants torch>=2.11, so a plain
+# `pip install whisperx` silently swaps in the CUDA torch 2.15 and breaks
+# the +cpu pins (seen Nov 15). torchcodec is therefore NOT installed on
+# purpose: whisperx decodes audio with the ffmpeg CLI, and torchaudio
+# falls back to soundfile — nothing in the pipeline needs torchcodec.
+# pytorch-metric-learning is pinned to 2.8.1 for the same reason: 3.x
+# requires torch>=2.14.0 and would force the same upgrade.
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch==2.8.0+cpu
+torchaudio==2.8.0+cpu
+torchvision==0.23.0+cpu
+whisperx==3.8.6
+transformers==4.57.6
+pandas==3.1.1
+nltk==3.10.4
+omegaconf==2.4.0
+huggingface-hub==0.36.2
+ctranslate2==4.9.0
+pyannote-audio==4.0.7
+triton==3.9.0
+soundfile==0.14.0
+pytorch-metric-learning==2.8.1
+lightning==2.6.6
+torchmetrics==1.9.0
+asteroid-filterbanks==0.4.0
+einops==0.8.2
+julius==0.2.8
+pyannote-core==6.1.0
+pyannote-database==6.2.0
+pyannote-metrics==4.2.0
+pyannote-pipeline==4.1.0
+pyannoteai-sdk==0.4.0
+torch-audiomentations==0.12.0
+rich==15.0.0
+safetensors==0.8.0
+matplotlib==3.11.2
+scenedetect==0.7.3
+auto-editor==29.3.1

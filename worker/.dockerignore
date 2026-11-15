@@ -1,0 +1,9 @@
+# Keep the Docker build context lean (the git repo already excludes most
+# of these via .gitignore; this covers local `docker build` runs).
+.venv/
+data/
+__pycache__/
+app/__pycache__/
+remotion/node_modules/
+remotion/public/
+*.pyc

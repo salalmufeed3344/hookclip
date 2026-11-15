@@ -206,14 +206,16 @@ def snap_to_words(start: float, end: float, words: list, duration: float) -> tup
 
 
 def candidate_moments(transcript: dict, chat: list, audio: list,
-                      viewer_clips: list, duration: float) -> list:
+                      viewer_clips: list, duration: float,
+                      scene_cuts: list | None = None) -> list:
     """Merge all signals into candidate moments with a signals dict.
 
     Chat windows with ratio >= 2.5, loud audio spikes, and viewer-clip
     positions each open a candidate (chat spikes start 20s early, audio /
-    viewer moments start 3s early, ~45s long, snapped to words).
-    Overlapping candidates merge; the strongest signals win. Sorted by
-    signal strength, best first.
+    viewer moments start 3s early, ~45s long, snapped to words, then to
+    the nearest scene cut so clips never start mid-cut). Overlapping
+    candidates merge; the strongest signals win. Sorted by signal
+    strength, best first.
     """
     words = transcript.get("words", [])
     raw = []
@@ -270,6 +272,19 @@ def candidate_moments(transcript: dict, chat: list, audio: list,
         s, e = snap_to_words(c["start"], c["end"], words, duration)
         if e - s < 10:
             continue
+        # Snap to the nearest scene cut (PySceneDetect) so the clip opens
+        # and closes on a hard cut, never mid-shot. Then re-clamp length:
+        # the end snap can push the clip past the 60s cap.
+        if scene_cuts:
+            from . import scenes as scenes_mod
+            s, e, cut_info = scenes_mod.snap_to_scene_cuts(s, e, scene_cuts)
+            for k, v in cut_info.items():
+                if v is not None:
+                    c["signals"][k] = v
+            if e - s > MAX_CLIP_SEC:
+                e = s + MAX_CLIP_SEC
+            if e - s < 10:
+                continue
         c = {"start": s, "end": e, "signals": c["signals"]}
         # Transcript snippet for the ranker.
         seg_text = " ".join(

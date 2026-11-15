@@ -3,9 +3,11 @@
 - Facecam split: webcam crop on top, gameplay below (vstack). No webcam:
   action-tracked center crop (centered; the crop follows the loudest
   half of the clip when the energy moves — P0 keeps it centered).
-- Captions: word timings -> ASS with karaoke highlight (current word
-  lights up). Hook text is an ASS event over the first 3 seconds.
+- Captions: Remotion first (animated word-by-word highlight + hook
+  animation over a clean ffmpeg reframe); ffmpeg + ASS karaoke is the
+  always-working fallback. Hook text is over the first 3 seconds.
 - Free tier: small "Hookclip" watermark, bottom-right. Paid: clean.
+- After export, Auto-Editor trims silent sections best-effort.
 - One ffmpeg call per clip. 1080x1920 H.264 + AAC.
 """
 import glob
@@ -135,16 +137,11 @@ def _probe_size(video_path: Path) -> tuple:
     return int(w), int(h)
 
 
-def render_clip(source: Path, start: float, end: float, hook_text: str,
-                caption_style: str, watermark: bool, out_path: Path,
-                facecam_box: dict | None, words: list) -> Path:
-    """Render one clip. Returns out_path. Raises RuntimeError on failure."""
-    duration = max(1.0, end - start)
-    ass_path = out_path.with_suffix(".ass")
-    build_ass(words, start, end, hook_text, caption_style, ass_path)
+def _reframe_vf(source: Path, facecam_box: dict | None) -> str:
+    """The 9:16 reframe filtergraph (facecam split or centre crop),
+    ending at [vpre]. Shared by the ASS path and the Remotion path
+    (Remotion needs the same reframe, without captions, as its input)."""
     src_w, src_h = _probe_size(source)
-
-    # Reframe filtergraph.
     if facecam_box:
         x, y, fw, fh = facecam_box
         # Facecam crop: box expanded a little, centred on the face.
@@ -159,18 +156,51 @@ def render_clip(source: Path, start: float, end: float, hook_text: str,
         gw = min(src_w, int(src_h * OUT_W / HALF_H))
         gw -= gw % 2
         gx = max(0, (src_w - gw) // 2)
-        vf = (
+        return (
             f"[0:v]split=2[ta][ba];"
             f"[ta]crop=w={cw}:h={ch}:x={cx}:y={cy},scale={OUT_W}:{HALF_H}[top];"
             f"[ba]crop=w={gw}:h={src_h}:x={gx}:y=0,scale={OUT_W}:{HALF_H}[bot];"
             f"[top][bot]vstack=inputs=2,setsar=1[vpre]"
         )
-    else:
-        cw = int(src_h * 9 / 16)
-        cw -= cw % 2
-        cx = max(0, (src_w - cw) // 2)
-        vf = (f"[0:v]crop=w={cw}:h={src_h}:x={cx}:y=0,"
-              f"scale={OUT_W}:{OUT_H},setsar=1[vpre]")
+    cw = int(src_h * 9 / 16)
+    cw -= cw % 2
+    cx = max(0, (src_w - cw) // 2)
+    return (f"[0:v]crop=w={cw}:h={src_h}:x={cx}:y=0,"
+            f"scale={OUT_W}:{OUT_H},setsar=1[vpre]")
+
+
+def _render_clean(source: Path, start: float, end: float,
+                  facecam_box: dict | None, out_path: Path) -> Path:
+    """Reframe only, no captions/watermark — the clean input clip that
+    Remotion overlays its animated captions onto. Raises on failure."""
+    duration = max(1.0, end - start)
+    vf = _reframe_vf(source, facecam_box) + ";[vpre]null[vout]"
+    cmd = [
+        "ffmpeg", "-y", "-v", "error",
+        "-ss", str(round(start, 2)), "-t", str(round(duration, 2)),
+        "-i", str(source),
+        "-filter_complex", vf,
+        "-map", "[vout]", "-map", "0:a",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "23",
+        "-pix_fmt", "yuv420p", "-c:a", "aac", "-movflags", "+faststart",
+        str(out_path),
+    ]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    if r.returncode != 0 or not out_path.exists():
+        raise RuntimeError(f"ffmpeg clean render failed: {(r.stderr or '').strip()[-500:]}")
+    return out_path
+
+
+def render_clip(source: Path, start: float, end: float, hook_text: str,
+                caption_style: str, watermark: bool, out_path: Path,
+                facecam_box: dict | None, words: list) -> Path:
+    """Render one clip. Returns out_path. Raises RuntimeError on failure."""
+    duration = max(1.0, end - start)
+    ass_path = out_path.with_suffix(".ass")
+    build_ass(words, start, end, hook_text, caption_style, ass_path)
+
+    # Reframe filtergraph.
+    vf = _reframe_vf(source, facecam_box)
 
     # ASS subtitles need an escaped path (colons break the filter parser).
     ass_escaped = str(ass_path).replace(":", "\\:").replace("'", "\\'")
@@ -201,3 +231,41 @@ def render_clip(source: Path, start: float, end: float, hook_text: str,
     if r.returncode != 0 or not out_path.exists():
         raise RuntimeError(f"ffmpeg render failed: {(r.stderr or '').strip()[-500:]}")
     return out_path
+
+
+def render_clip_smart(source: Path, start: float, end: float, hook_text: str,
+                      caption_style: str, watermark: bool, out_path: Path,
+                      facecam_box: dict | None, words: list) -> tuple:
+    """Remotion-first render; ffmpeg+ASS fallback; silence trim last.
+
+    1. ffmpeg reframes the source into a clean clip (no captions).
+    2. Remotion overlays animated word-by-word captions + hook on it.
+       Any failure here -> the ffmpeg+ASS path above (always works).
+    3. Auto-Editor trims silent sections best-effort (never fails the job).
+
+    Returns (out_path, backend) with backend in {"remotion", "ffmpeg"}.
+    Raises only if the ffmpeg fallback itself fails.
+    """
+    from . import remotion_render, trim
+
+    clean = out_path.with_name(out_path.stem + ".clean.mp4")
+    backend = "ffmpeg"
+    try:
+        _render_clean(source, start, end, facecam_box, clean)
+        rem = remotion_render.render_with_remotion(
+            clean, words, start, end, hook_text, watermark, out_path)
+        if rem is not None:
+            backend = "remotion"
+    except Exception as e:
+        print(f"   ⚠️ Remotion path failed ({type(e).__name__}: {e}) "
+              f"— ffmpeg fallback.")
+    finally:
+        clean.unlink(missing_ok=True)
+    if backend == "ffmpeg":
+        render_clip(source, start, end, hook_text, caption_style,
+                    watermark, out_path, facecam_box, words)
+    try:
+        trim.trim_silence(out_path)
+    except Exception as e:
+        print(f"   ℹ️ silence trim skipped ({type(e).__name__}: {e})")
+    return out_path, backend

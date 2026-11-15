@@ -6,6 +6,8 @@ worker/app/__pycache__/
 frontend/node_modules/
 frontend/.next/
 frontend/out/
+worker/remotion/node_modules/
+worker/remotion/public/
 *.db
 *.sqlite3
 .env
