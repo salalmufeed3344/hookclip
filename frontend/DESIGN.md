@@ -16,6 +16,9 @@ colors:
   alert-bg: "#1d1210"
   alert-border: "#3d1f1a"
   alert-text: "#ff8a7a"
+  hover-light: "#e4e4e7"
+  shadow: "rgba(0, 0, 0, 0.45)"
+  shadow-soft: "rgba(0, 0, 0, 0.35)"
 typography:
   display:
     fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
@@ -47,7 +50,80 @@ typography:
     fontWeight: 700
     lineHeight: 1.4
     letterSpacing: "0.08em"
+  meta:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "13px"
+    fontWeight: 400
+    lineHeight: 1.4
+    letterSpacing: "0em"
+  small:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "14px"
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: "0em"
+  button:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "15px"
+    fontWeight: 650
+    lineHeight: 1.4
+    letterSpacing: "0em"
+  rowbody:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "15.5px"
+    fontWeight: 400
+    lineHeight: 1.6
+    letterSpacing: "0em"
+  input:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "16px"
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: "0em"
+  sub:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "18px"
+    fontWeight: 400
+    lineHeight: 1.5
+    letterSpacing: "0em"
+  numeral:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "28px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  stepnum:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "32px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  price:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "40px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.03em"
+  apphead:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "34px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
+  appscore:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "22px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
+  planname-lg:
+    fontFamily: "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif"
+    fontSize: "24px"
+    fontWeight: 800
+    lineHeight: 1.15
+    letterSpacing: "-0.02em"
 rounded:
+  xs: "2px"
   sm: "8px"
   md: "10px"
   lg: "12px"
@@ -88,7 +164,7 @@ components:
 
 **Creative North Star: "The Night Desk"**
 
-Hookclip is the desk where a night of GTA VI streams turns into money. The interface is the room the work happens in: near-black, quiet, precise, with one red accent that marks only actions and the single best score. Nothing glows, nothing gradients, nothing pretends to be a photo. The product itself is the visual — the ranked moment list, the score chips, the 9:16 clip frame — shown at full size in the first viewport instead of claimed in copy.
+Hookclip is the desk where a night of GTA VI streams turns into money. The interface is the room the work happens in: near-black, quiet, precise, with one red accent that marks only actions and the single best score. Nothing glows, nothing gradients, nothing pretends to be a photo. The product itself is the visual — the ranked moment list, the score chips, the 9:16 clip frame — shown at full size in the proof section instead of claimed in copy.
 
 Dark is earned by the scene, not picked by category: clippers work at night, in dark rooms, watching streams. The tool lives where the footage lives.
 
@@ -98,6 +174,8 @@ Dark is earned by the scene, not picked by category: clippers work at night, in 
 - Hairline-divided rows instead of cards as page structure.
 - Real product UI as the only visual; demonstration data is labeled as a sample.
 - System font stack throughout; hierarchy comes from size, weight, and color, never a display face.
+- Page structure follows @ayzz.thedesigner's landing order (hero → proof → problem → solution → how it works → FAQ → final CTA → footer). The product is shown in the proof section, after the hero, never before the problem is felt.
+- Motion follows Emil Kowalski's animation rules: transform + opacity only, strong ease-out, one entrance per container, shrinking stagger delays, reduced motion collapses the choreography.
 
 ## Colors
 
@@ -132,7 +210,14 @@ The palette is a neutral near-black with a single red. No purple, no neon, no se
 - **Headline** (800, 36px, 1.15, -0.02em): section headings.
 - **Title** (800, 20px, 1.15, -0.02em): row titles, card headings, plan names.
 - **Body** (400, 17px, 1.6): body copy. Measure 65–75ch; feature and step paragraphs cap at 560px.
-- **Label** (700, 12.5px, 0.08em, uppercase): row tags and the "Most popular" flag.
+- **Sub** (400, 18px, 1.5): section introductions under headings.
+- **Input** (400, 16px, 1.5): form inputs.
+- **Row body** (400, 15.5px, 1.6): paragraphs inside hairline rows.
+- **Button** (650, 15px, 1.4): buttons and small body text.
+- **Small** (400, 14px, 1.5): notes, meta lines, dashboard text.
+- **Meta** (400, 13px, 1.4): panel meta, clip meta, plan flags.
+- **Label** (700, 12.5px, 0.08em, uppercase): the "Most popular" flag. Never above a heading (see the No Eyebrow Rule).
+- **Numerals** (800, tabular): cost numbers 28px, step numbers 32px, prices 40px, score chips 20–22px.
 
 ### Named Rules
 **The No Eyebrow Rule.** No kicker or eyebrow label above a heading, ever. The heading carries its own weight.
@@ -178,16 +263,26 @@ Corners are gently rounded: 12px on cards and panels, 10px on inputs and chips, 
 
 ### Product panel (signature)
 - **Style:** Panel background, Hairline border, 16px radius, soft shadow. Header row with title left and sample meta right; body is a grid of the moment list and a 9:16 clip frame.
-- **Clip frame:** 9:16, Strong Hairline border, 10px radius, authored still image with a solid dark caption bar (never a gradient scrim).
+- **Clip frame:** 9:16, Strong Hairline border, 10px radius, authored still image with a solid dark caption bar (never a gradient scrim). Slow Ken Burns, 10s ease-in-out alternate.
+- **Placement:** the proof section, second on the page — never in the hero. The hero is text-led (result + fear); the panel proves the claim after it.
 
 ## Do's and Don'ts
 
+## Motion
+
+The page moves in exactly two places, both following Emil Kowalski's rules (transform + opacity only; strong ease-out `cubic-bezier(0.23, 1, 0.32, 1)`; never `scale(0)`; no `transition: all`).
+
+- **Hero entrance** (once, on load): the launch pill fades only (decoration); the headline leads (600ms, fade + 12px rise); the lede follows at 80ms and the CTAs at 140ms, each with shorter, smaller motion. One keyframe, per-element travel distance.
+- **Proof panel** (once, when scrolled into view): the panel itself is static — one entrance per container. Its three moment rows stagger in with shrinking delays (0 / 70 / 120ms), 450ms each, fade + 8px rise. Total stagger span under 300ms.
+- **Clip frame:** a slow Ken Burns (10s, ease-in-out, alternate, scale 1 → 1.05) so the still feels alive. Constant motion, linear family.
+- **Everything else is static.** No scroll reveals on other sections, no hover motion beyond button brightness. Under `prefers-reduced-motion`, the choreography collapses: no movement, no delays, opacity only; content renders visible with JS off (hidden state applies only under a `.js` parent class).
+
 ### Do:
-- **Do** show the product doing its job in the first viewport — the ranked list, not a claim about it.
+- **Do** show the product doing its job in the proof section, right after the hero — the ranked list, not a claim about it.
 - **Do** keep every text color at 4.5:1 or better on its surface (verified by the Impeccable detector, Nov 15, 2026).
 - **Do** label demonstration data as a sample wherever a visitor could mistake it for real output.
 - **Do** theme browser surfaces from the palette: red text selection, white focus rings, dark scrollbars.
-- **Do** use one authored motion moment per page (the hero panel's rise, exponential ease-out), and respect reduced-motion.
+- **Do** use the two authored motion moments above and nothing else, and respect reduced-motion.
 
 ### Don't:
 - **Don't** add a gradient, glow, glass panel, bento grid, or orb anywhere.
