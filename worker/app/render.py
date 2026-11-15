@@ -17,6 +17,10 @@ from pathlib import Path
 
 OUT_W, OUT_H = 1080, 1920
 HALF_H = OUT_H // 2
+# Remotion renders at ~34x realtime on CPU (Nov 15 E2E: a 60s clip burned
+# the whole 1800s timeout, a 20s clip rendered fine). Only short clips
+# attempt Remotion; longer ones go straight to ffmpeg+ASS.
+REMOTION_MAX_SEC = 30.0
 
 
 def _font_path() -> str:
@@ -243,19 +247,30 @@ def render_clip_smart(source: Path, start: float, end: float, hook_text: str,
        Any failure here -> the ffmpeg+ASS path above (always works).
     3. Auto-Editor trims silent sections best-effort (never fails the job).
 
+    Remotion is only attempted for SHORT clips (<= 30s): on CPU it renders
+    at ~34x realtime, so a 60s clip burned the whole 1800s timeout in the
+    Nov 15 E2E and fell back anyway — while tying up the single worker
+    for 30 min. A 20s clip rendered fine. Longer clips go straight to
+    ffmpeg+ASS, which is fast at any length.
+
     Returns (out_path, backend) with backend in {"remotion", "ffmpeg"}.
     Raises only if the ffmpeg fallback itself fails.
     """
     from . import remotion_render, trim
 
+    duration = max(1.0, end - start)
     clean = out_path.with_name(out_path.stem + ".clean.mp4")
     backend = "ffmpeg"
     try:
         _render_clean(source, start, end, facecam_box, clean)
-        rem = remotion_render.render_with_remotion(
-            clean, words, start, end, hook_text, watermark, out_path)
-        if rem is not None:
-            backend = "remotion"
+        if duration <= REMOTION_MAX_SEC:
+            rem = remotion_render.render_with_remotion(
+                clean, words, start, end, hook_text, watermark, out_path)
+            if rem is not None:
+                backend = "remotion"
+        else:
+            print(f"   ℹ️ clip is {duration:.0f}s — Remotion capped at "
+                  f"{REMOTION_MAX_SEC:.0f}s, straight to ffmpeg captions.")
     except Exception as e:
         print(f"   ⚠️ Remotion path failed ({type(e).__name__}: {e}) "
               f"— ffmpeg fallback.")

@@ -1,5 +1,10 @@
 # Hookclip worker — FastAPI + pipeline
 # Install: python3 -m venv .venv && .venv/bin/pip install -r requirements.txt
+# The +cpu torch/torchaudio/torchvision pins below exist ONLY on PyTorch's
+# CPU wheel index — plain PyPI has no 2.8.0+cpu, so a Docker build without
+# this line fails at torch. (Verified Nov 15, 2026: PyPI lists no +cpu
+# builds; the CPU index lists 2.8.0+cpu.)
+--extra-index-url https://download.pytorch.org/whl/cpu
 fastapi==0.115.6
 uvicorn[standard]==0.34.0
 httpx==0.28.1
@@ -11,7 +16,10 @@ av==13.1.0  # faster-whisper calls av.open(metadata_errors=...), removed in PyAV
 chat-downloader==0.2.3
 opencv-python-headless==4.10.0.84
 google-genai==1.6.0
-numpy==2.2.1
+numpy==2.5.4  # was 2.2.1: pyannote-metrics==4.2.0 needs numpy>=2.2.2, so a
+# clean install from this file failed to resolve. 2.5.4 is what the
+# Nov 15 local E2E venv actually ran with (pip upgraded it during the
+# whisperx install), so this pins the verified combination.
 
 # --- Clip stack (Nov 15, 2026 — from the marc.kaz reel) ---
 # WhisperX (word timestamps + diarization), PySceneDetect (scene cuts),
